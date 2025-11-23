@@ -1,0 +1,83 @@
+:root {
+  --background: #0f172a;
+  /* Dark blue background */
+  --card-bg: #1e293b;
+  /* Slightly lighter blue for cards */
+  --text-main: #f1f5f9;
+  /* Light gray text */
+  --text-muted: #94a3b8;
+  /* Muted blue-gray text */
+  --primary-color: #38bdf8;
+  /* Sky blue primary */
+  --primary-hover: #0ea5e9;
+  /* Darker sky blue hover */
+  --accent-color: #7dd3fc;
+  /* Light blue accent */
+  --danger-color: #ef4444;
+  --success-color: #10b981;
+  --border-color: #334155;
+  /* Blue-gray border */
+}
+
+body {
+  color: var(--text-main);
+  background: var(--background);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border-color);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  border-color: var(--primary-color);
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge.open {
+  background-color: rgba(230, 57, 70, 0.2);
+  color: var(--danger-color);
+}
+
+.badge.fixed {
+  background-color: rgba(42, 157, 143, 0.2);
+  color: var(--success-color);
+}

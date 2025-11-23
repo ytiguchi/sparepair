@@ -1,0 +1,356 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    padding: 2rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+    background: var(--card-bg);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    animation: slideUp 0.3s ease-out;
+    position: relative;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s;
+}
+
+.closeBtn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.imageSection {
+    flex: 1.2;
+    background: #000;
+    position: relative;
+    min-height: 400px;
+}
+
+.iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: cover;
+}
+
+.contentSection {
+    flex: 1;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.statusBadge {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.statusBadge.open {
+    background-color: rgba(230, 57, 70, 0.2);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.statusBadge.inprogress {
+    background-color: rgba(233, 196, 106, 0.2);
+    color: #e9c46a;
+    border: 1px solid #e9c46a;
+}
+
+.statusBadge.fixed {
+    background-color: rgba(42, 157, 143, 0.2);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--text-main);
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    margin: 0 0 2rem 0;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.infoItem label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.infoItem p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.remarksSection {
+    margin-bottom: 2rem;
+}
+
+.remarksSection label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.remarks {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text-main);
+    white-space: pre-wrap;
+}
+
+.editInput {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: #0f172a;
+    color: var(--text-main);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.editTextarea {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: #0f172a;
+    color: var(--text-main);
+    font-family: inherit;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.timelineSection {
+    margin-bottom: 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+}
+
+.timelineSection label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.timeline {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+
+.timelineItem {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.timelineItem:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.timelineHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+}
+
+.timelineDate {
+    color: var(--text-muted);
+}
+
+.timelineUser {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.timelineContent {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.noHistory {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.commentForm {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.userNameInput {
+    width: 150px;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: #0f172a;
+    color: var(--text-main);
+}
+
+.commentInput {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: #0f172a;
+    color: var(--text-main);
+}
+
+.commentSubmitBtn {
+    padding: 0 1.5rem;
+    border-radius: 4px;
+    border: none;
+    background: var(--primary-color);
+    color: #0f172a;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.actions {
+    margin-top: auto;
+}
+
+.actionBtn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    border: none;
+    background: var(--primary-color);
+    color: #1a1a1a;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.actionBtn:hover {
+    opacity: 0.9;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal {
+        flex-direction: column;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0;
+    }
+
+    .imageSection {
+        flex: 1;
+        max-height: 40vh;
+        min-height: auto;
+    }
+
+    .contentSection {
+        flex: 1.5;
+    }
+}

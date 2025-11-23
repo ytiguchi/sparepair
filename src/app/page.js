@@ -18,6 +18,7 @@ export default function Home() {
     const [reports, setReports] = useState([]);
     const [filter, setFilter] = useState('Open');
     const [facilityFilter, setFacilityFilter] = useState('All');
+    const [sortBy, setSortBy] = useState('urgency'); // 'urgency', 'date-new', 'date-old'
     const [selectedReport, setSelectedReport] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
@@ -38,11 +39,42 @@ export default function Home() {
         return ['All', ...Array.from(uniq)];
     }, [reports]);
 
-    const filteredReports = reports.filter(r => {
-        const statusMatch = filter === 'All' || r.status === filter;
-        const facilityMatch = facilityFilter === 'All' || r.facility === facilityFilter;
-        return statusMatch && facilityMatch;
-    });
+    const filteredReports = useMemo(() => {
+        let filtered = reports.filter(r => {
+            const statusMatch = filter === 'All' || r.status === filter;
+            const facilityMatch = facilityFilter === 'All' || r.facility === facilityFilter;
+            return statusMatch && facilityMatch;
+        });
+
+        // Helper function to extract urgency from report
+        const getUrgency = (report) => {
+            // First check if urgency field exists
+            if (report.urgency) return report.urgency;
+
+            // Otherwise extract from remarks
+            const remarks = report.remarks || '';
+            if (remarks.includes('緊急度: 高') || remarks.includes('緊急度:高')) return '高';
+            if (remarks.includes('緊急度: 中') || remarks.includes('緊急度:中')) return '中';
+            if (remarks.includes('緊急度: 低') || remarks.includes('緊急度:低')) return '低';
+            return '中'; // Default to medium if not specified
+        };
+
+        // Sort by urgency or date
+        if (sortBy === 'urgency') {
+            const urgencyOrder = { '高': 1, '中': 2, '低': 3 };
+            filtered.sort((a, b) => {
+                const urgencyA = urgencyOrder[getUrgency(a)] || 999;
+                const urgencyB = urgencyOrder[getUrgency(b)] || 999;
+                return urgencyA - urgencyB;
+            });
+        } else if (sortBy === 'date-new') {
+            filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        } else if (sortBy === 'date-old') {
+            filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        }
+
+        return filtered;
+    }, [reports, filter, facilityFilter, sortBy]);
 
     const stats = {
         open: reports.filter(r => r.status === 'Open').length,
@@ -80,9 +112,10 @@ export default function Home() {
                 location: newReportData.location,
                 item: newReportData.item,
                 remarks: newReportData.remarks,
+                urgency: newReportData.urgency || '中',
                 imageUrl,
                 timestamp: new Date().toLocaleString('ja-JP'),
-                reporter: '新規投稿',
+                reporter: newReportData.reporter || '新規投稿',
                 status: 'Open',
                 history: []
             };
@@ -171,12 +204,26 @@ export default function Home() {
             <header className={styles.header}>
                 <div className="container">
                     <div className={styles.headerContent}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                            <img src="/logo.png" alt="Ledian Spa" style={{ height: '40px', objectFit: 'contain' }} />
-                            <div>
-                                <h1 className={styles.title}>Ledian Group</h1>
-                                <p className={styles.subtitle}>修繕依頼アプリ</p>
-                            </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <img
+                                src="/logo.png"
+                                alt="Ledian Spa"
+                                style={{
+                                    height: '50px',
+                                    objectFit: 'contain',
+                                    background: 'white',
+                                    padding: '8px 12px',
+                                    borderRadius: '8px'
+                                }}
+                            />
+                            <h1 style={{
+                                fontSize: '1.5rem',
+                                fontWeight: '600',
+                                color: 'var(--text-main)',
+                                margin: 0
+                            }}>
+                                修繕管理
+                            </h1>
                         </div>
                         <div className={styles.stats}>
                             <div className={styles.statItem}>
@@ -193,16 +240,35 @@ export default function Home() {
             </header>
 
             <div className="container">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '1rem', flexWrap: 'wrap' }}>
                     <div className={styles.controls} style={{ marginBottom: 0 }}>
                         <button className={`${styles.filterBtn} ${filter === 'All' ? styles.active : ''}`} onClick={() => setFilter('All')}>全て</button>
                         <button className={`${styles.filterBtn} ${filter === 'Open' ? styles.active : ''}`} onClick={() => setFilter('Open')}>未対応</button>
                         <button className={`${styles.filterBtn} ${filter === 'In Progress' ? styles.active : ''}`} onClick={() => setFilter('In Progress')}>対応中</button>
                         <button className={`${styles.filterBtn} ${filter === 'Fixed' ? styles.active : ''}`} onClick={() => setFilter('Fixed')}>完了</button>
                     </div>
-                    <button className={styles.filterBtn} style={{ background: 'var(--primary-color)', color: '#1a1a1a', fontWeight: 'bold', border: 'none' }} onClick={() => setIsModalOpen(true)}>
-                        ＋ 新規投稿
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            style={{
+                                background: 'rgba(30, 30, 30, 0.8)',
+                                border: '1px solid var(--border-color)',
+                                color: 'var(--text-main)',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '999px',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            <option value="urgency">緊急度順</option>
+                            <option value="date-new">新しい順</option>
+                            <option value="date-old">古い順</option>
+                        </select>
+                        <button className={styles.filterBtn} style={{ background: 'var(--primary-color)', color: '#1a1a1a', fontWeight: 'bold', border: 'none' }} onClick={() => setIsModalOpen(true)}>
+                            ＋ 新規投稿
+                        </button>
+                    </div>
                 </div>
 
                 <div className={styles.controls}>
@@ -238,6 +304,17 @@ export default function Home() {
                     />
                 )}
             </div>
+
+            <footer style={{
+                textAlign: 'center',
+                padding: '2rem 0',
+                marginTop: '4rem',
+                borderTop: '1px solid var(--border-color)',
+                color: 'var(--text-muted)',
+                fontSize: '0.875rem'
+            }}>
+                © 2025 Ledian. All rights reserved.
+            </footer>
         </main>
     );
 }

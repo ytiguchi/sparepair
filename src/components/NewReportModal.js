@@ -11,7 +11,8 @@ export default function NewReportModal({ onClose, onSubmit, statusMessage }) {
         item: '',
         imageUrl: '',
         imageFile: null,
-        priority: '中',
+        urgency: '中',
+        reporter: '',
         remarks: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -145,8 +146,8 @@ export default function NewReportModal({ onClose, onSubmit, statusMessage }) {
                     <div className={styles.infoItem}>
                         <label>緊急度</label>
                         <select
-                            name="priority"
-                            value={formData.priority}
+                            name="urgency"
+                            value={formData.urgency}
                             onChange={handleChange}
                             style={{ width: '100%', padding: '0.5rem', background: '#333', color: '#fff', border: '1px solid #555', borderRadius: '4px' }}
                         >
@@ -154,6 +155,19 @@ export default function NewReportModal({ onClose, onSubmit, statusMessage }) {
                             <option value="中">中</option>
                             <option value="高">高</option>
                         </select>
+                    </div>
+
+                    <div className={styles.infoItem}>
+                        <label>記入者名</label>
+                        <input
+                            type="text"
+                            name="reporter"
+                            value={formData.reporter}
+                            onChange={handleChange}
+                            required
+                            placeholder="例: 山田太郎"
+                            style={{ width: '100%', padding: '0.5rem', background: '#333', color: '#fff', border: '1px solid #555', borderRadius: '4px' }}
+                        />
                     </div>
 
                     <div className={styles.remarksSection}>

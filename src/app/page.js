@@ -13,6 +13,7 @@ import {
     uploadImage,
     deleteReport
 } from '../lib/firebaseService';
+import { checkRateLimit, recordSubmit } from '../utils/rateLimit';
 
 export default function Home() {
     const [reports, setReports] = useState([]);
@@ -84,6 +85,14 @@ export default function Home() {
     // ---------- Handlers ----------
     const handleAddReport = async (newReportData) => {
         console.log('Submitting new report:', newReportData);
+
+        // レート制限チェック
+        const rateCheck = checkRateLimit();
+        if (!rateCheck.allowed) {
+            alert(`連続投稿を防ぐため、${rateCheck.remainingSeconds}秒後に再度お試しください。`);
+            throw new Error('Rate limit exceeded');
+        }
+
         try {
             setStatusMessage('画像をアップロード中...');
             let imageUrl = newReportData.imageUrl;
@@ -121,6 +130,7 @@ export default function Home() {
             };
             const docId = await addReport(report);
             console.log('Report added, id:', docId);
+            recordSubmit(); // 投稿時刻を記録
             setIsModalOpen(false);
             return docId;
         } catch (e) {
